@@ -3,4 +3,5 @@
 obj
 out
 .ycm*
+.vimrc
 cscope*
