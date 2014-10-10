@@ -1,0 +1,6 @@
+*.un~
+*.swp
+obj
+out
+.ycm*
+cscope*
