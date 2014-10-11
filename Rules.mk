@@ -8,13 +8,10 @@ d               := $(abspath $(dir))
 # Local variables
 
 SRC_$(d) := \
-	client_command_factory.cpp\
 	command.cpp\
-	command_factory.cpp\
 	main.cpp\
 	client.cpp\
-	client_config.cpp\
-	version_command.cpp
+	client_config.cpp
 SRC_$(d) := $(addprefix $(d)/, $(SRC_$(d)))
 PFX_$(d) := $(OBJDIR)/$(d)
 OBJ_$(d) := $(addsuffix .o, $(addprefix $(OBJDIR)/, $(SRC_$(d))))
@@ -23,11 +20,16 @@ TGT_$(d) := $(OUTDIR)/client
 
 # Compile referenced variables
 
-INC_$(d)/ := -I$(BOOST)
+INC_$(d)/ :=\
+	-I$(BOOST)
 
 # Link referenced variables
 
-LIB_$(TGT_$(d)) := -lboost_thread -lboost_system -lpthread
+LIB_$(TGT_$(d)) :=\
+	-lboost_thread\
+	-lboost_system\
+	-lpthread\
+	-lboost_program_options
 
 # Local rules
 

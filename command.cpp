@@ -11,11 +11,13 @@ namespace hw
 {
 
 const char* command::sFieldSeparator = ":";
+const char* command::sCommandSeparator = "\n";
 
 command::command( unsigned int deviceId, unsigned int commandId, std::string const& data ) :
     mDeviceId( deviceId ),
     mCommandId( commandId ),
-    mData( data )
+    mData( data ),
+    mSerialized( makeSerialized() )
 {
 }
 
@@ -23,11 +25,24 @@ command::~command()
 {
 }
 
-std::string command::serialize( void )
+command::command( command const& cmd ) :
+    mDeviceId( cmd.mDeviceId ),
+    mCommandId( cmd.mCommandId ),
+    mData( cmd.mData ),
+    mSerialized( cmd.mSerialized )
+{
+}
+
+std::string command::makeSerialized( void )
 {
     std::ostringstream oss;
-    oss << getDeviceId() << sFieldSeparator << getCommandId() << sFieldSeparator << getData();
+    oss << getDeviceId() << sFieldSeparator << getCommandId() << sFieldSeparator << getData() << sCommandSeparator;
     return oss.str();
+}
+
+std::string const& command::serialize( void )
+{
+    return mSerialized;
 }
 
 unsigned int command::getCommandId( void ) const

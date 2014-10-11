@@ -27,9 +27,14 @@ public:
     virtual ~command();
 
     /**
+     * CTOR
+     */
+    command( command const& );
+
+    /**
      * @brief Creates a command string out of the object for use on the network
      */
-    virtual std::string serialize( void );
+    std::string const& serialize( void );
 
     /**
      * @brief getter method
@@ -48,10 +53,20 @@ public:
 
 private:
 
+    // Static data
     static const char* sFieldSeparator;
+    static const char* sCommandSeparator;
+
+    // Member data
     unsigned int mDeviceId;
     unsigned int mCommandId;
     std::string mData;
+    std::string mSerialized;
+
+    /**
+     * @brief Makes the serialized string and returns it
+     */
+    std::string makeSerialized( void );
 
     /**
      * Hidden
@@ -62,11 +77,6 @@ private:
      * Hidden
      */
     command const& operator=( command const& );
-
-    /**
-     * Hidden
-     */
-    command( command const& );
 
 };
     

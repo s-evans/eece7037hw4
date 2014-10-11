@@ -7,7 +7,9 @@
 #define CLIENT_H
 
 #include <boost/asio.hpp>
+#include <boost/asio/buffer.hpp>
 #include "client_config.hpp"
+#include "command.hpp"
 
 namespace hw 
 {
@@ -19,7 +21,11 @@ public:
     /**
      * CTOR
      */
-    client( boost::asio::io_service& ioService, client_config const& client_config );
+    client( 
+        boost::asio::io_service& ioService,
+        client_config const& clientConfig,
+        boost::asio::ip::tcp::endpoint const& remoteEndpoint,
+        command const& command );
 
     /**
      * DTOR
@@ -28,10 +34,17 @@ public:
 
 private:
 
-    boost::asio::io_service& mIoService;
-    const client_config&     mClientConfig;
-    boost::asio::ip::tcp::resolver mResolver;
-    boost::asio::ip::tcp::socket mSocket;
+    // Static data
+    static const unsigned int sBufferSize;
+    static const char* sCommandSeparator;
+
+    // Members 
+    boost::asio::io_service&       mIoService;
+    const client_config&           mClientConfig;
+    boost::asio::ip::tcp::endpoint mEndPoint;
+    command                        mCommand;
+    boost::asio::ip::tcp::socket   mSocket;
+    boost::asio::streambuf         mBufferBytes;
 
     /**
      * @brief Starts dns resolution
@@ -48,6 +61,17 @@ private:
      * @brief Handles tcp connection
      */
     void connectionHandler( const boost::system::error_code& error );
+
+    /**
+     * @brief Handles data read off the socket
+     */
+    void readHandler( const boost::system::error_code& error, std::size_t bytes_transferred );
+
+    /**
+     * @brief Handles having written data to the socket
+     */
+    void writeHandler(
+         const boost::system::error_code& error, std::size_t bytes_transferred );
 
     /**
      * Hidden
